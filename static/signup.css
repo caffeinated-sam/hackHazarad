@@ -63,3 +63,49 @@ body {
 .signup-container a:hover {
     text-decoration: underline;
 }
+
+/* General styling */
+#settings-container {
+    position: relative;
+    margin-left: auto;
+  }
+  
+  .settings-btn {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #724ae8;
+  }
+  
+  .settings-dropdown {
+    display: none;
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
+  
+  .settings-dropdown a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: #333;
+    font-size: 0.95rem;
+  }
+  
+  .settings-dropdown a:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .settings-btn:hover {
+    color: #5a3ac8;
+  }
+  
+  /* When settings dropdown is shown */
+  .settings-dropdown.show {
+    display: block;
+  }
