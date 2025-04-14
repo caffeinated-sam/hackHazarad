@@ -1,13 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Healthcare AI</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 <body>
-    <h1>Welcome to the Home Page!</h1>
-    <p><a href="/login">Login</a></p>
-    <p><a href="/signup">Sign Up</a></p>
+  <div class="sidebar">
+    <h3>Chat History</h3>
+    <ul>
+      <li>Chat with Bot #1</li>
+      <li>Chat with Bot #2</li>
+      <li>Chat with Bot #3</li>
+    </ul>
+  </div>
+
+  <div class="chatbot-container">
+    <header>
+      <h2>Happy Bot</h2>
+    </header>
+
+    <ul class="chatbox">
+      <li class="chat incoming">
+        <span class="material-symbols-outlined"> heart_plus </span>
+        <p>Hi there! 🚑🖐 <br />How can I help you today?</p>
+      </li>
+      <li class="chat outgoing">
+        <p>Lorem ipsum dolor sit amet consectetur.</p>
+      </li>
+    </ul>
+
+    <div id="chatbox" class="chat-input">
+      <span id="attachment" class="material-symbols-outlined attachment-btn">attach_file</span>
+      <textarea placeholder="Enter a message..." required></textarea>
+      <span class="material-symbols-outlined">send</span>
+    </div>
+  </div>
+
+  <script>
+    const sendBtn = document.querySelector('.chat-input span.material-symbols-outlined:last-of-type');
+    const attachBtn = document.getElementById('attachment');
+    const chatBox = document.querySelector('.chatbox');
+    const textInput = document.querySelector('.chat-input textarea');
+  
+    // Function to send message
+    function sendMessage() {
+      const userMessage = textInput.value.trim();
+      if (userMessage === '') return;
+  
+      const outgoingMsg = document.createElement('li');
+      outgoingMsg.className = 'chat outgoing';
+      outgoingMsg.innerHTML = `<p>${userMessage}</p>`;
+      chatBox.appendChild(outgoingMsg);
+      textInput.value = '';
+  
+      // Simulate bot response
+      setTimeout(() => {
+        const botMsg = document.createElement('li');
+        botMsg.className = 'chat incoming';
+        botMsg.innerHTML = `<span class="material-symbols-outlined">heart_plus</span>
+                            <p>I received: "${userMessage}" 😊</p>`;
+        chatBox.appendChild(botMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 1000);
+    }
+  
+    // Send on click
+    sendBtn.addEventListener('click', sendMessage);
+  
+    // Send on Enter (but allow Shift+Enter for new line)
+    textInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+  
+    // Attach button behavior
+    attachBtn.addEventListener('click', () => {
+      alert("Attachment button clicked (add file upload logic here)");
+    });
+
+    function sendMessage() {
+        const msg = document.getElementById("message").value;
+        if (!msg) return;
+
+        document.getElementById("chatbox").innerHTML += <div class='msg user'><strong>You:</strong> ${msg}</div>;
+        document.getElementById("message").value = "";
+
+        fetch("/ask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: msg })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("chatbox").innerHTML += <div class='msg bot'><strong>Bot:</strong> ${data.reply}</div>;
+        });
+    }
+  </script>
+  
+  
 </body>
 </html>
