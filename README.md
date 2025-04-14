@@ -1,10 +1,3 @@
-Looks like you're almost there! Here's a cleaned-up and properly formatted version of your `README.md`, correcting a few things like:
-
-- Fixing broken code blocks
-- Fixing misplaced text inside code blocks
-- Adding back sections like headers and markdown styling
-
----
 
 ```markdown
 # 🚀 Project Setup and Contribution Guide
