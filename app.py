@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from main import run_vector_pipeline
 
 # Initialize Flask app and other extensions
 app = Flask(__name__)
@@ -75,6 +76,24 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/build-vector-db', methods=['POST'])
+def build_vector_db():
+    result = run_vector_pipeline()
+    return render_template('index.html', message=result)
+
+
+@app.route("/ask", methods=["POST"])
+def ask():
+    user_input = request.json.get("message")
+
+    # STEP 1: Use RAG to get relevant context
+    context = get_relevant_context(user_input)
+
+    # STEP 2: Send question + context to GROQ
+    reply = call_groq_api(user_input, context)
+
+    # STEP 3: Return reply to frontend
+    return jsonify({"reply": reply})
 # Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True)
