@@ -1,18 +1,13 @@
 import requests
 import json
+from ai.config import GROQ_API_KEY  # 👈 import the key properly
 
-def get_groq_response(context, user_input, api_key_path="ai/config.py", debug=True):
+def get_groq_response(context, user_input, debug=True):
     """Call the GROQ API and get the processed response."""
-    # Load API key from a configuration file
-    try:
-        with open(api_key_path, 'r') as key_file:
-            api_key = key_file.read().strip()
-    except FileNotFoundError:
-        return "❌ Error: API key file not found."
 
     api_url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer {api_key}",
+        "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json"
     }
 
@@ -39,7 +34,7 @@ def get_groq_response(context, user_input, api_key_path="ai/config.py", debug=Tr
             print("Payload:", json.dumps(data, indent=2))
 
         response = requests.post(api_url, headers=headers, json=data)
-        
+
         if debug:
             print("🔧 [DEBUG] Response status code:", response.status_code)
             print("🔧 [DEBUG] Response body:", response.text)
@@ -51,7 +46,7 @@ def get_groq_response(context, user_input, api_key_path="ai/config.py", debug=Tr
             return response_json['choices'][0]['message']['content']
         else:
             return "⚠️ Error: No response content found."
-    
+
     except requests.exceptions.RequestException as e:
         return f"🚫 Error: Request failed - {e}"
     except ValueError:

@@ -2,7 +2,7 @@ import subprocess
 import os
 import requests
 from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
 from ai.check_pdf import check_pdfs  # Ensure this is the correct path for your check_pdfs function
 import json
 
@@ -25,17 +25,41 @@ def run_vector_pipeline():
         print("📈 Building FAISS vector index...")
         subprocess.run(["python", os.path.join(AI_DIR, "build_faiss_index.py")], check=True)
 
+        # Confirm that the FAISS index file has been created
+        faiss_index_path = "./embeddings/faiss_medical_db/index.faiss"
+        if os.path.exists(faiss_index_path):
+            print(f"🎉 FAISS index created successfully at {faiss_index_path}")
+        else:
+            print("❌ FAISS index creation failed.")
+
         return "✅ Vector pipeline executed successfully."
     except subprocess.CalledProcessError as e:
         return f"❌ Pipeline failed: {str(e)}"
 
 # === STEP 2: Get Context from FAISS ===
+
 def get_relevant_context(user_input):
     """Fetch the most relevant context from the FAISS vector store."""
-    embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")  # Embedding model to convert text to vectors
-    db = FAISS.load_local("faiss_health_index", embedding, allow_dangerous_deserialization=True)  # 🔐 Safe if you trust your index
-    docs = db.similarity_search(user_input, k=3)  # Get top 3 most similar documents
-    return "\n\n".join([doc.page_content for doc in docs])  # Combine content from the top docs as context
+    
+    try:
+        # Define the FAISS index path (replace with your actual index path)
+        index_path = 'D:/study/practice/JeevDead/embeddings/faiss_medical_db'  # Make sure this points to the correct folder where your .faiss file is
+        faiss_index_path = os.path.abspath(index_path)  # Convert to absolute path
+
+        # Load the FAISS index using the embedding model
+        embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        db = FAISS.load_local(faiss_index_path, embedding, allow_dangerous_deserialization=True)
+
+        # Perform similarity search to get the most relevant documents
+        docs = db.similarity_search(user_input, k=3)  # Adjust the number 'k' for how many results you want
+
+        # Return the content of the top 'k' documents
+        return "\n\n".join([doc.page_content for doc in docs])
+
+    except Exception as e:
+        # Handle any errors that occur (e.g., file not found, loading issues)
+        print(f"Error while fetching context: {e}")
+        return "Sorry, I couldn't fetch the context at the moment. Please try again later."
 
 # === STEP 3: Call GROQ API ===
 def get_groq_response(context, user_input, api_key_path="ai/config.py"):
