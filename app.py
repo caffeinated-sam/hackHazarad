@@ -41,10 +41,10 @@ with app.app_context():
 # Route for the homepage
 @app.route('/')
 def index():
-    if 'user_id' not in session:  # Check if user is logged in
-        return render_template('login.html')  # Render login page directly if not logged in
+    if 'user_id' not in session:  # Check if the user is logged in
+        return redirect(url_for('login'))  # Redirect to login if not logged in
     return render_template('index.html')  # Render the home page if logged in
-
+    
 # Route for signup
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -53,6 +53,11 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        confirm_password = request.form['confirm_password']  # Confirm password field
+
+        # Check if passwords match
+        if password != confirm_password:
+            return render_template('signup.html', error="Passwords do not match")
 
         # Hash the password using Bcrypt
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -64,11 +69,11 @@ def signup():
         try:
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for('index'))  # Redirect to home page after successful signup
+            return redirect(url_for('login'))  # Redirect to login page after successful signup
         except Exception as e:
             db.session.rollback()  # Rollback in case of error
             return f"Error: {str(e)}"  # Show the error message
-    
+
     return render_template('signup.html')
 
 # Route for login
@@ -144,8 +149,7 @@ def logout():
 @app.route("/groq-response", methods=["POST"])
 def groq_response():
     data = request.get_json()
-    user_input = data.get("message", "")
-
+    user_input = data.get("query", "")
     if not user_input:
         return jsonify({"error": "No message provided"}), 400
 

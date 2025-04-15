@@ -1,11 +1,20 @@
 import subprocess
+import os
 
-def install_requirements(file_path='requirements.txt'):
+def main():
+    requirements_file = os.path.join(os.path.dirname(__file__), "requirements.txt")
+    
+    if not os.path.exists(requirements_file):
+        print("❌ requirements.txt not found.")
+        return
+
+    print("📦 Installing packages from requirements.txt...\n")
+
     try:
-        subprocess.check_call(['pip', 'install', '-r', file_path])
-        print("All packages installed successfully.")
+        subprocess.check_call(["pip", "install", "-r", requirements_file])
+        print("✅ All packages installed successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"An error occurred: {e}")
+        print(f"❌ Failed to install packages: {e}")
 
-if name == 'main':
-    install_requirements()
+if __name__ == '__main__':
+    main()

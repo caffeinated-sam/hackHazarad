@@ -2,7 +2,7 @@ import subprocess
 import os
 import requests
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from ai.check_pdf import check_pdfs  # Ensure this is the correct path for your check_pdfs function
 import json
 
@@ -33,7 +33,7 @@ def run_vector_pipeline():
 def get_relevant_context(user_input):
     """Fetch the most relevant context from the FAISS vector store."""
     embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")  # Embedding model to convert text to vectors
-    db = FAISS.load_local("faiss_health_index", embedding)  # Load the FAISS index
+    db = FAISS.load_local("faiss_health_index", embedding, allow_dangerous_deserialization=True)  # 🔐 Safe if you trust your index
     docs = db.similarity_search(user_input, k=3)  # Get top 3 most similar documents
     return "\n\n".join([doc.page_content for doc in docs])  # Combine content from the top docs as context
 
