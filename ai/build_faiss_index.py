@@ -3,11 +3,24 @@ import pickle
 import faiss
 from sentence_transformers import SentenceTransformer
 
+# Load the chunks
 with open("./embeddings/all_chunks.pkl", "rb") as f:
     all_chunks = pickle.load(f)
 
+print(f"Loaded {len(all_chunks)} chunks from all_chunks.pkl")
+
+# If no chunks are loaded, exit
+if len(all_chunks) == 0:
+    print("No chunks found. Please check the PDF extraction and chunking process.")
+    exit()  # Or handle accordingly
+
 # Extract the text from chunks
 texts = [chunk["chunk"] for chunk in all_chunks]
+
+# If no texts, exit
+if len(texts) == 0:
+    print("No text chunks found. Aborting embedding generation.")
+    exit()
 
 # Initialize the model
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")

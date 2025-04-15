@@ -11,23 +11,24 @@ def extract_all_text(base_path):
     for disease_folder in os.listdir(base_path):
         folder_path = os.path.join(base_path, disease_folder)
         if os.path.isdir(folder_path):
-            for filename in os.listdir(folder_path):
-                if filename.endswith(".pdf"):
-                    file_path = os.path.join(folder_path, filename)
-                    try:
-                        doc = fitz.open(file_path)
-                        text = "".join([page.get_text() for page in doc])
-                        all_text.append({
-                            "disease": disease_folder,
-                            "filename": filename,
-                            "text": text
-                        })
-                    except Exception as e:
-                        print(f"Error reading {filename}: {e}")
+            print(f"Processing folder: {disease_folder}")
+            # Walk through all subdirectories and files recursively
+            for root, _, files in os.walk(folder_path):
+                for filename in files:
+                    if filename.endswith(".pdf"):
+                        file_path = os.path.join(root, filename)
+                        try:
+                            doc = fitz.open(file_path)
+                            text = "".join([page.get_text() for page in doc])
+                            all_text.append({
+                                "disease": disease_folder,
+                                "filename": filename,
+                                "text": text
+                            })
+                            print(f"Extracted text from: {filename}")
+                        except Exception as e:
+                            print(f"Error reading {filename}: {e}")
     return all_text
-def get_relevant_context(user_input):
-    docs = db.similarity_search(user_input, k=3)
-    return "\n\n".join([doc.page_content for doc in docs])
 
 def chunk_text(docs):
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
@@ -44,10 +45,16 @@ def chunk_text(docs):
     return all_chunks
 
 if __name__ == "__main__":
+    print("🚀 Starting extraction and chunking pipeline...")
     extracted_data = extract_all_text(BASE_PATH)
+    print(f"Extracted {len(extracted_data)} documents.")
+
+    print("Starting text chunking...")
     chunks = chunk_text(extracted_data)
+    print(f"Total chunks created: {len(chunks)}")
 
     with open("./embeddings/all_chunks.pkl", "wb") as f:
         pickle.dump(chunks, f)
 
     print(f"✅ {len(chunks)} chunks saved to ./embeddings/all_chunks.pkl")
+    print("✅ Pipeline completed successfully.")
