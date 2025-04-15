@@ -13,3 +13,4 @@ sentence-transformers
 opencv-contrib-python
 ultralytics
 langchain-community
+pyngrok
