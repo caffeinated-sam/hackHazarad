@@ -141,15 +141,22 @@ header h2 {
 
 .chatbox .chat p {
   padding: 12px 16px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   border-radius: 10px;
   max-width: 75%;
   line-height: 1.4;
   white-space: pre-wrap; /* Preserve spaces and newlines */
   word-wrap: break-word; /* Allow text to wrap inside the container */
+  white-space: pre-wrap;
+  margin-bottom: 8px;
 }
-
 .chatbox .incoming p {
+  box-shadow: 0 1px 3 px rgba(0, 0, 0,0.1);
+}
+.chatbox .incoming p ul,
+.chatbox .incoming p ol{
+  padding-left: 20px;
+  margin-top: 8px;
   background: #f2f2f2;
   color: #000;
   border-radius: 10px 10px 10px 0;
@@ -178,16 +185,16 @@ header h2 {
 .chat-input textarea {
   flex: 1;
   min-height: 50px;
+  max-height: 200px; /* Max height for expansion */
   resize: none;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px;
   font-size: 0.95rem;
   outline: none;
-  line-height: 1.4; /* Allow for line spacing */
-  overflow-y: hidden;
-  max-height: 200px; /* Max height for expansion */
-  transition: max-height 0.3s ease-in-out; /* Smooth expansion */
+  line-height: 1.4;
+  overflow-y: auto; /* 👈 This allows scrolling when full */
+  transition: max-height 0.3s ease-in-out;
 }
 
 /* When there’s content in textarea, expand it upwards */
