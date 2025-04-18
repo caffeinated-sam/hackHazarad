@@ -5,6 +5,11 @@ folder :- static , template , database , readme,md
 changes :- added all the files and folder 
 
 Name :- black death(J)
-Date/time :- 17-04-2025 10:07
+Date/time :- 17-04-2025 10:07 PM
 file :-  profile template
 changes :- added new file
+
+Name :- black death(J)
+Date/time :- 18-04-2025 12:18 AM
+file :-  static templates
+changes :- added profile new one in static and templates
