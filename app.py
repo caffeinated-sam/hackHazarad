@@ -1,10 +1,15 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+import time
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from main import run_vector_pipeline, get_relevant_context
 from groq_api import get_groq_response
 from pyngrok import ngrok
+from image_ocr import detect_text_from_image
+from ai.medicine_rag import search_medicine_pdf
+from groq_api import get_groq_response
+from werkzeug.utils import secure_filename
 import subprocess
 import base64
 
@@ -15,7 +20,10 @@ print("🔥 Public URL:", public_url)
 # Flask app setup
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # SQLite DB config
 base_dir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir, "database", "user.db")}'
@@ -119,21 +127,6 @@ def start_camera():
     subprocess.Popen(["python", "detect_objects.py"])
     return '', 204
 
-@app.route('/upload-image', methods=['POST'])
-def upload_image():
-    data = request.get_json()
-    image_data = data.get('image')
-
-    # Convert the base64 string back to image
-    image_data = image_data.split(',')[1]
-    image_binary = base64.b64decode(image_data)
-
-    # Save the image
-    img_path = os.path.join('static', 'uploaded_image.png')
-    with open(img_path, 'wb') as f:
-        f.write(image_binary)
-    return jsonify({"message": "Image uploaded successfully!"})
-
 # Logout route to remove user session
 @app.route('/profile')
 def profile():
@@ -150,6 +143,7 @@ def logout():
 
 @app.route("/groq-response", methods=["POST"])
 def groq_response():
+    start_time = time.time()
     data = request.get_json()
     user_input = data.get("query", "")
     if not user_input:
@@ -159,6 +153,60 @@ def groq_response():
     context = get_relevant_context(user_input)
     reply = get_groq_response(context, user_input, debug=True)
     return jsonify({"reply": reply})
+
+# Image Upload from Chatbot UI
+@app.route('/upload-image', methods=['POST'])
+def upload_image():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400
+
+    file = request.files['file']
+    caption = request.form.get('caption', '').strip()
+
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    # Save the image
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(filepath)
+
+    # OCR the image
+    ocr_result = detect_text_from_image(filepath)
+    ocr_text = ocr_result.get('raw_text', '').strip()
+    medicine = ocr_result.get('medicine', 'Unknown')
+
+    # Build prompt
+    prompt = f"""The user uploaded an image that contains the following visible text:
+\"{ocr_text}\"
+
+They also wrote this message:
+\"{caption}\"
+
+Based on the image content and the caption, describe what this image is likely about and answer any question implied in the message."""
+
+    # 🔥 Send prompt directly — no context fetching
+    reply = get_groq_response("", prompt, debug=True)
+
+    return jsonify({
+        'filename': filename,
+        'medicine': medicine,
+        'extracted_text': ocr_text,
+        'caption': caption,
+        'response': reply
+    })
+
+@app.route('/uploaded-image/<filename>')
+def uploaded_image(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/upload-pdf', methods=['POST'])
+def upload_pdf():
+    file = request.files.get('file')
+    if file and file.filename.endswith('.pdf'):
+        # Save or process PDF
+        return jsonify({'response': f"✅ PDF '{file.filename}' uploaded successfully!"})
+    return jsonify({'response': "⚠️ Invalid file format."})
 
 # Run the Flask app
 if __name__ == '__main__':
