@@ -16,6 +16,6 @@ changes :- added profile new one in static and templates
 
 Name :- Rex
 Date/time :- 19-04-2025 16:05
-file :- app.py , main.py , image_ocr.py ,  requirements.txt
+file :- app.py , main.py , image_ocr.py ,  requirements.txt , readme.md
 folder :- static , templates , medicine , profile template
 changes :- added some new files and updated prev files and folders
