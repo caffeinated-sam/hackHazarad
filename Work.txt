@@ -1,5 +1,5 @@
 Name :- Jellyean
-Date/time :- 14-02-2025 13:42
+Date/time :- 14-04-2025 13:42
 file :-  app.py , req.py login.html , signup.html , index.html , style.css , login.css , signup.css , user.db , work.txt 
 folder :- static , template , database , readme,md
 changes :- added all the files and folder 
@@ -13,3 +13,9 @@ Name :- black death(J)
 Date/time :- 18-04-2025 12:18 AM
 file :-  static templates
 changes :- added profile new one in static and templates
+
+Name :- Rex
+Date/time :- 19-04-2025 16:05
+file :- app.py , main.py , image_ocr.py ,  requirements.txt
+folder :- static , templates , medicine , profile template
+changes :- added some new files and updated prev files and folders
