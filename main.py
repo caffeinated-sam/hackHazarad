@@ -5,7 +5,9 @@ import json
 import sqlite3
 
 from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEmbeddings  # Updated import to avoid deprecation
+from langchain_huggingface import HuggingFaceEmbeddings
+
+  # Updated import to avoid deprecation
 
 from ai.check_pdf import check_pdfs
 # from ai.conversation_db import save_conversation_history  # Uncomment if using conversation logging
@@ -46,32 +48,27 @@ def run_vector_pipeline():
 # === STEP 2: Context Retrieval ===
 def get_relevant_context(user_input):
     try:
-        # Check if FAISS index exists
         if not os.path.exists(os.path.join(INDEX_DIR, "index.faiss")):
             return "⚠️ FAISS index not found. Please run the vector pipeline first."
 
-        # Initialize embeddings
         embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-        
-        # Load the FAISS index
-        print("🔧 Loading FAISS index...")
-        db = FAISS.load_local(INDEX_DIR, embedding)  # Removed 'allow_dangerous_deserialization=True'
 
-        # Perform the similarity search
+        print("🔧 Loading FAISS index...")
+        db = FAISS.load_local(INDEX_DIR, embedding, allow_dangerous_deserialization=True)
+
         print("🔍 Performing similarity search...")
         docs = db.similarity_search(user_input, k=3)
-        
-        # If no relevant documents are found
+
         if not docs:
             print("📭 No matching documents found.")
             return "No relevant context found."
 
-        # Return the context from the most relevant documents
         return "\n\n".join([doc.page_content for doc in docs])
 
     except Exception as e:
         print(f"❌ Error while fetching context: {e}")
         return "⚠️ Failed to fetch context."
+
 
 # === STEP 3: GROQ API Call ===
 def get_groq_response(context, user_input, debug=False):
@@ -128,7 +125,7 @@ def run_object_detection():
 if __name__ == "__main__":
     print("🚀 Starting Health AI Vector + GROQ pipeline...")
 
-    initialize_conversation_db("database/conversation.db")
+    
 
     # Optionally run the pipeline (only needed once)
     # status = run_vector_pipeline()
