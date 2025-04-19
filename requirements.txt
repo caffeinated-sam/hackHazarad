@@ -10,7 +10,12 @@ langchain
 faiss-cpu
 requests
 sentence-transformers
-opencv-contrib-python
-ultralytics
+opencv-python 
 langchain-community
+langchain-huggingface
 pyngrok
+pypdf2
+pytesseract
+werkzeug
+aiohttp
+apscheduler
