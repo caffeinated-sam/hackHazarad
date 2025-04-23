@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
       chatBox.appendChild(botMsg);
 
       let index = 0;
-      const typingSpeed = 10;
+      const typingSpeed = 5;
 
       function typeChar() {
         if (index < message.length) {

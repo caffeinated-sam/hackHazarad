@@ -11,7 +11,6 @@ html, body {
   height: 100%;
   width: 100%;
   display: flex;
-  background: #f5f5f5;
   overflow: hidden;
 }
 
@@ -391,4 +390,184 @@ header h2 {
   right: 20px;
   font-size: 0.75rem;
   color: #777;
+}
+
+:root {
+  --discord-bg-dark: #1c1f26; /* Dark blue-greyish */
+  --discord-bg-light: #2a2f38; /* Lightened midnight blue */
+  --discord-bg-gradient: linear-gradient(135deg, #0a0f14, #1c1f26, #2a2f38); /* Midnight blue gradient */
+  --discord-text-primary: #dcddde;
+  --discord-text-secondary: #b9bbbe;
+  --discord-accent: #5865f2; /* Accent color (blue) */
+  --discord-input-bg: #3a414b; /* Darkened grey for input */
+  --discord-border: #202225;
+}
+
+/* Apply this class to <body> or top container to enable Discord theme */
+.discord-theme {
+  background: var(--discord-bg-gradient);
+  color: var(--discord-text-primary);
+}
+
+.discord-theme .sidebar {
+  background-color: var(--discord-bg-light);
+  border-right: 1px solid var(--discord-border);
+  color: var(--discord-text-secondary);
+}
+
+.discord-theme .sidebar ul li:hover {
+  color: var(--discord-accent);
+}
+
+.discord-theme header {
+  background-color: var(--discord-accent);
+  color: #fff;
+}
+
+.discord-theme .chatbox {
+  background-color: var(--discord-bg-dark);
+  color: var(--discord-text-primary);
+}
+
+.discord-theme .chatbox .chat p {
+  background-color: var(--discord-bg-light);
+  color: var(--discord-text-primary);
+}
+
+.discord-theme .chatbox .incoming p ul,
+.discord-theme .chatbox .incoming p ol {
+  background-color: var(--discord-input-bg);
+  color: var(--discord-text-primary);
+}
+
+.discord-theme .chatbox .outgoing p {
+  background-color: var(--discord-accent);
+  color: #fff;
+}
+
+.discord-theme .chat-input {
+  background-color: var(--discord-bg-light);
+  border-top: 1px solid var(--discord-border);
+}
+
+.discord-theme .chat-input textarea {
+  background-color: var(--discord-input-bg);
+  color: var(--discord-text-primary);
+  border: 1px solid var(--discord-border);
+}
+
+.discord-theme .chat-input span {
+  color: var(--discord-accent);
+}
+
+.discord-theme .chat-input span:hover {
+  color: #4752c4;
+}
+
+.discord-theme .dropdown,
+.discord-theme .upload-menu,
+.discord-theme .settings-menu {
+  background-color: var(--discord-bg-light);
+  border: 1px solid var(--discord-border);
+}
+
+.discord-theme .dropdown a,
+.discord-theme .upload-menu label,
+.discord-theme .settings-menu a {
+  color: var(--discord-text-secondary);
+}
+
+.discord-theme .dropdown a:hover,
+.discord-theme .upload-menu label:hover,
+.discord-theme .settings-menu a:hover {
+  background-color: var(--discord-input-bg);
+}
+
+.discord-theme .history-note {
+  color: var(--discord-text-secondary);
+}
+
+.discord-theme #imagePreviewContainer {
+  background-color: var(--discord-bg-light) !important;
+  border: 1px solid var(--discord-border);
+}
+
+/* Image Preview Styling */
+#imagePreviewContainer {
+  display: none;
+  padding: 12px;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+#imagePreview {
+  position: relative;
+  display: inline-block;
+}
+
+#imagePreview img {
+  max-width: 150px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove Button */
+#removeImageBtn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #f04747;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 24px;
+  text-align: center;
+  box-shadow: 0 0 0 2px #2f3136;
+}
+
+#removeImageBtn:hover {
+  background: #d03535;
+}
+
+/* Discord Theme Overrides for Preview */
+.discord-theme #imagePreviewContainer {
+  background-color: var(--discord-bg-light);
+}
+
+.discord-theme #imagePreview img {
+  border: 2px solid var(--discord-border);
+  background-color: var(--discord-bg-dark);
+}
+
+.discord-theme #removeImageBtn {
+  box-shadow: 0 0 0 2px var(--discord-bg-light);
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #2a2f38; /* Light midnight blue */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #5865f2; /* Discord accent color (blue) */
+  border-radius: 4px;
+  border: 2px solid #1c1f26; /* Darker background color */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #4752c4; /* Darker blue when hovered */
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #2a2f38; /* Same as track background */
 }
