@@ -176,14 +176,19 @@ def upload_image():
     ocr_text = ocr_result.get('raw_text', '').strip()
     medicine = ocr_result.get('medicine', 'Unknown')
 
+    # Extract key features from OCR result (you can customize this further)
+    key_features = extract_key_features_from_text(ocr_text)
+
     # Build prompt
-    prompt = f"""The user uploaded an image that contains the following visible text:
+    prompt = f"""The user uploaded an image containing the following visible text:
 \"{ocr_text}\"
 
-They also wrote this message:
+They also wrote the following caption:
 \"{caption}\"
 
-Based on the image content and the caption, describe what this image is likely about and answer any question implied in the message."""
+Based on this image and the caption, please:
+1. Describe the key features of the object in the image.
+2. Answer any questions implied in the message, providing details based on the content from the image and caption."""
 
     # 🔥 Send prompt directly — no context fetching
     reply = get_groq_response("", prompt, debug=True)
@@ -193,8 +198,25 @@ Based on the image content and the caption, describe what this image is likely a
         'medicine': medicine,
         'extracted_text': ocr_text,
         'caption': caption,
+        'key_features': key_features,
         'response': reply
     })
+
+def extract_key_features_from_text(ocr_text):
+    # This is a placeholder function. You can add more sophisticated feature extraction logic.
+    # Here, we're simply looking for specific keywords like 'medicine', 'ingredients', 'dosage', etc.
+    key_features = []
+    
+    # Example keywords to look for
+    keywords = ['medicine', 'ingredients', 'dosage', 'expiration', 'brand', 'side effects']
+    
+    # Search for these keywords in the OCR text
+    for keyword in keywords:
+        if keyword.lower() in ocr_text.lower():
+            key_features.append(keyword)
+
+    return key_features
+
 
 @app.route('/uploaded-image/<filename>')
 def uploaded_image(filename):
@@ -207,6 +229,7 @@ def upload_pdf():
         # Save or process PDF
         return jsonify({'response': f"✅ PDF '{file.filename}' uploaded successfully!"})
     return jsonify({'response': "⚠️ Invalid file format."})
+
 
 # Run the Flask app
 if __name__ == '__main__':
