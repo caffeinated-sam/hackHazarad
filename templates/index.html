@@ -9,7 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
-<body class="discord-theme">
+<body>
+  <div class="sidebar">
+    <h3>Chat History</h3>
+    <ul>
+      <li>Chat with Bot #1</li>
+      <li>Chat with Bot #2</li>
+      <li>Chat with Bot #3</li>
+    </ul>
+  </div>
+
   <div class="chatbot-container">
     <header>
       <h2>Healthcare Ai</h2>
@@ -22,14 +31,14 @@
       </div>   
     </header>
 
-    <ul class="chatbox" >
+    <ul class="chatbox">
       <li class="chat incoming">
         <span class="material-symbols-outlined">heart_plus</span>
         <p>Hi there! 🚑🖐 <br />How can I help you today?</p>
       </li>
     </ul>
 
-    <div id="imagePreviewContainer" style="display: none; padding: 10px 20px; background-color: var(--discord-bg-light);">
+    <div id="imagePreviewContainer" style="display: none; padding: 10px 20px;">
       <div id="imagePreview" style="position: relative; display: inline-block;">
         <img src="" alt="Preview" style="max-width: 150px; border-radius: 10px;">
         <button id="removeImageBtn" type="button" style="position: absolute; top: 5px; right: 5px; background: #f44336; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer;">×</button>
@@ -44,7 +53,7 @@
           <label for="uploadPDF">📄 Upload PDF</label>
         </div>
         <input type="file" id="uploadImage" accept="image/*" style="display: none;" />
-        <input type="file" id="uploadPDF" accept="application/pdf" style="display: none;" />
+        <input type="file" id="uploadPDF" accept=".pdf" style="display: none;" />
         <input type="file" id="fileUpload" accept="image/*" style="display: none;" />
       </div>
       <textarea placeholder="Enter a message..." required></textarea>
