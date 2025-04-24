@@ -222,13 +222,28 @@ def extract_key_features_from_text(ocr_text):
 def uploaded_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/upload-pdf', methods=['POST'])
+@app.route("/upload-pdf", methods=["POST"])
 def upload_pdf():
-    file = request.files.get('file')
-    if file and file.filename.endswith('.pdf'):
-        # Save or process PDF
-        return jsonify({'response': f"✅ PDF '{file.filename}' uploaded successfully!"})
-    return jsonify({'response': "⚠️ Invalid file format."})
+    file = request.files.get("file")
+    if not file:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    # Save the file
+    path = os.path.join("database", "docs", file.filename)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    file.save(path)
+
+    # Extract text (PDF to text)
+    from fitz import open as fitz_open
+    doc = fitz_open(path)
+    extracted_text = "\n".join([page.get_text() for page in doc])
+
+    # Send the text to GROQ
+    question = "What is this document about?"
+    from groq_api import get_groq_response  # Make sure this is your actual import path
+    response = get_groq_response(extracted_text, question)
+
+    return jsonify({"response": response})
 
 
 # Run the Flask app
