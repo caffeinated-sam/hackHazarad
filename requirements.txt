@@ -16,6 +16,7 @@ langchain-huggingface
 pyngrok
 pypdf2
 pytesseract
+python-docx
 werkzeug
 aiohttp
 apscheduler
