@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const li = document.createElement('li');
     li.className = 'chat outgoing';
-    li.innerHTML = `<p>📄 Uploaded PDF: ${file.name}</p>`;
+    li.innerHTML = `<p><strong>📄 You uploaded:</strong> ${file.name}</p>`;
     chatBox.appendChild(li);
     chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
       chatBox.appendChild(botMsg);
 
       let index = 0;
-      const typingSpeed = 5;
+      const typingSpeed = 10;
 
       function typeChar() {
         if (index < message.length) {
