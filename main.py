@@ -4,8 +4,10 @@ import requests
 import json
 import sqlite3
 
+
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
+from docx import Document
 
   # Updated import to avoid deprecation
 
@@ -120,6 +122,17 @@ def get_groq_response(context, user_input, debug=False):
 # === CAMERA CONNECT ===
 def run_object_detection():
     subprocess.run(["python", "detect_objects.py"])
+
+# === PDF/Doc Read ===
+def extract_text_from_pdf(path):
+    import fitz  # PyMuPDF
+    doc = fitz.open(path)
+    return "\n".join([page.get_text() for page in doc])
+
+def extract_text_from_doc(path):
+    doc = Document(path)
+    return "\n".join([para.text for para in doc.paragraphs])
+
 
 # === ENTRY POINT ===
 if __name__ == "__main__":
