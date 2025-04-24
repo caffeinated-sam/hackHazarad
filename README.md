@@ -158,7 +158,8 @@ Access to clear and trustworthy medical information is a universal need. Yet, ma
 ## 📽️ Demo & Deliverables
 
 - **Demo Video Link:** [[YouTube link ](https://www.youtube.com/watch?v=ksiyXk6G9nk)]  
-- **Pitch Deck / PPT Link:** [[Google Slides](https://docs.google.com/presentation/d/13EBZAqgq57nVgSsTIZPdPxhDz1Xb3C37NT66u9SaJUI/edit?usp=sharing)]  
+- **Pitch Deck / PPT Link:** [[Google Slides](https://docs.google.com/presentation/d/13EBZAqgq57nVgSsTIZPdPxhDz1Xb3C37NT66u9SaJUI/edit?usp=sharing)]
+- **Deployment Link:** [[link](http://57.129.95.165:5000/)] 
 
 ---
 
