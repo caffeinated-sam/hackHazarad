@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare Assistant</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #1e1f22;
+      color: white;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #2c2d30;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.3s ease, padding 0.3s ease;
+      overflow: hidden;
+    }
+    .sidebar.hidden {
+      width: 0;
+      padding: 20px 0;
+    }
+    .sidebar h2 {
+      margin-top: 0;
+    }
+    .sidebar button {
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #3a3b3f;
+      color: white;
+      cursor: pointer;
+      text-align: left;
+    }
+    .sidebar button.new-chat {
+      background: #005cff;
+    }
+
+    /* Chat area */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #1e1f22;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2c2d30;
+      padding: 10px 20px;
+      position: relative;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      flex: 1;
+      text-align: center;
+    }
+    .menu-btn {
+      font-size: 22px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Profile */
+    .profile {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: #005cff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+    .profile i {
+      font-size: 20px;
+      color: white;
+    }
+
+    /* Dropdown menu */
+    .dropdown {
+      position: absolute;
+      top: 55px;
+      right: 20px;
+      background: #2c2d30;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      min-width: 150px;
+      z-index: 10;
+    }
+    .dropdown.show {
+      display: flex;
+    }
+    .dropdown button {
+      background: none;
+      border: none;
+      color: white;
+      text-align: left;
+      padding: 12px;
+      cursor: pointer;
+    }
+    .dropdown button:hover {
+      background: #3a3b3f;
+    }
+
+    /* Chat messages */
+    .messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .message {
+      background: #3a3b3f;
+      padding: 10px 15px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      max-width: 60%;
+    }
+
+    /* Input area */
+    .input-area {
+      display: flex;
+      padding: 10px;
+      background: #2c2d30;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+    }
+    .input-area button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: #005cff;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h2>Chats</h2>
+    <button class="new-chat">+ New Chat</button>
+    <button>Old Chat 1</button>
+    <button>Old Chat 2</button>
+    <button>Old Chat 3</button>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="chat-area">
+    <div class="header">
+      <button class="menu-btn" id="menu-btn"><i class='bx bx-menu'></i></button>
+      <h1>Healthcare Assistant</h1>
+
+      <!-- Profile with dropdown -->
+      <div class="profile" id="profile">
+        <i class='bx bx-user'></i>
+        <div class="dropdown" id="dropdown">
+          <button>My Profile</button>
+          <button>Settings</button>
+          <button>Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="messages">
+      <div class="message">Hello! How can I help you today?</div>
+    </div>
+    <div class="input-area">
+      <input type="text" placeholder="Type your message...">
+      <button>Send</button>
+    </div>
+  </div>
+
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const profile = document.getElementById("profile");
+    const dropdown = document.getElementById("dropdown");
+
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("hidden");
+    });
+
+    profile.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("show");
+    });
+
+    // close dropdown if clicked outside
+    document.addEventListener("click", () => {
+      dropdown.classList.remove("show");
+    });
+  </script>
+</body>
+</html>
